@@ -11,10 +11,11 @@ unsigned int registro;                  //pin registros
 unsigned int escritura;                 //pin escritura
 
 } configuracion_t;
-void lcd_init(configuracion_t*);
-void lcd_clear(configuracion_t*);
-void lcd_setCursor(configuracion_t*);
-void lcd_print(configuracion_t*);
-void lcd_scrollDisplayLeft(configuracion_t*);
-void lcd_scrollDisplayRight(configuracion_t*);
+void lcd_init(configuracion_t*);                            //ya esta
+void lcd_clear(configuracion_t*);                           //ya esta
+void lcd_setCursor(configuracion_t*);                       //ya esta
+void lcd_print(configuracion_t*);                           //ya esta
+void lcd_scrollDisplayLeft(configuracion_t*);               //ya esta
+void lcd_scrollDisplayRight(configuracion_t*);              //ya esta
+lcd_send(configuracion_t*);
 #endif
