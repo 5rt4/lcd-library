@@ -35,28 +35,7 @@ void lcd_init(configuracion_t* s){
     }
 }
 
-void lcd_clear(configuracion_t* s){
-    s->puerto_otros -> BSRR |= (1<<(s->registro)+16);
-    s->puerto_otros -> BSRR |= (1<<(s->registro)+16);
-    s->puerto_datos -> BSRR |= (1<<s->pin_datos[0]);
-    for(int i=1;i<8;i++){
-        s->puerto_datos -> BSRR |= (1<<(s->pin_datos[i])+16);
-    }
-}
-
-void lcd_setcursor(configuracion_t*s , int col,int row){                //col y row en el main.c
-    uint8_t comando= col+row_shift[row];
-    lcd_send(s,comando,0);
-}
-
-void lcd_print(configuracion_t* s ,char *txt){
-    while(*txt){
-        lcd_send(s,*txt, 1);
-        txt++;
-    }
-}
-
-void lcd_send(configuracion_t* s, uint8_t dato, int rs){        //1 escribo caracteres 0 comandoos
+int lcd_send(configuracion_t* s, uint8_t dato, int rs){        //1 escribo caracteres 0 comandoos
     //R/W=0
     s->puerto_otros -> BSRR|=(1<<(s->escritura)+16);
     //si rs es 0, lo pongo en 0 y viceversa
@@ -69,27 +48,29 @@ void lcd_send(configuracion_t* s, uint8_t dato, int rs){        //1 escribo cara
     }
 }
 
-void lcd_scrollDisplayLeft(configuracion_t* s){
-    s->puerto_otros -> BSRR |= (1<<(s->registro)+16);
-    s->puerto_otros -> BSRR |= (1<<(s->registro)+16);
-    for(int i=0;i<4;i++){
-        s->puerto_datos -> BSRR |= (1<<(s->pin_datos[i])+16);
-    };
-    s->puerto_datos -> BSRR |= (1<<s->pin_datos[4]);
-    for(int i=5;i<7;i++){
-        s->puerto_datos -> BSRR |= (1<<(s->pin_datos[i])+16);
-    };
+int lcd_clear(configuracion_t* s){
+    uint8_t comando=0x01;
+    lcd_send(s,comando,0);
 }
 
-void lcd_scrollDisplayRight(configuracion_t*);{
-    s->puerto_otros -> BSRR |= (1<<(s->registro)+16);
-    s->puerto_otros -> BSRR |= (1<<(s->registro)+16);
-    for(int i=0;i<2;i++){
-        s->puerto_datos -> BSRR |= (1<<(s->pin_datos[i])+16);
-    };
-    s->puerto_datos -> BSRR |= (1<<s->pin_datos[2]);
-    s->puerto_datos -> BSRR |= (1<<s->pin_datos[4]);
-    for(int i=5;i<7;i++){
-        s->puerto_datos -> BSRR |= (1<<(s->pin_datos[i])+16);
-    };
+int lcd_setcursor(configuracion_t*s , int col,int row){
+    uint8_t comando= col+row_shift[row];
+    lcd_send(s,comando,0);
+}
+
+int lcd_print(configuracion_t* s ,char *txt){
+    while(*txt){
+        lcd_send(s,*txt, 1);
+        txt++;
+    }
+}
+
+int lcd_scrollDisplayLeft(configuracion_t*s){
+    uint8_t comando=0x18;
+    lcd_send(s,comando,0);
+}
+
+int lcd_scrollDisplayRight(configuracion_t*s){
+    uint8_t comando=0x1C;
+    lcd_send(s,comando,0);
 }
